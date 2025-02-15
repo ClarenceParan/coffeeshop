@@ -2,6 +2,7 @@ package coffeeshop;
 
 
 import coffeeshop.Coffeeshop;
+import config.dbConnect;
 import javax.swing.JOptionPane;
 
 /*
@@ -39,16 +40,18 @@ public class Registration extends javax.swing.JFrame {
         Navigation1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        Epassword = new javax.swing.JPasswordField();
-        Eusername = new javax.swing.JTextField();
+        password = new javax.swing.JPasswordField();
+        username = new javax.swing.JTextField();
         register = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        Eemail = new javax.swing.JTextField();
+        email = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        ECpassword = new javax.swing.JPasswordField();
+        Cpassword = new javax.swing.JPasswordField();
         register1 = new javax.swing.JButton();
+        accType = new javax.swing.JComboBox<>();
+        jLabel14 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,27 +91,27 @@ public class Registration extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Registration");
-        Manager_Login1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 140, 160, 30));
+        Manager_Login1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 120, 160, 30));
 
         jLabel10.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel10.setText("PASSWORD:");
-        Manager_Login1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 250, 100, 30));
+        Manager_Login1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 300, 100, 30));
 
-        Epassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Epassword.addActionListener(new java.awt.event.ActionListener() {
+        password.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EpasswordActionPerformed(evt);
+                passwordActionPerformed(evt);
             }
         });
-        Manager_Login1.add(Epassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 250, 330, 30));
+        Manager_Login1.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 300, 330, 30));
 
-        Eusername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Eusername.addActionListener(new java.awt.event.ActionListener() {
+        username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EusernameActionPerformed(evt);
+                usernameActionPerformed(evt);
             }
         });
-        Manager_Login1.add(Eusername, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 200, 330, 30));
+        Manager_Login1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 200, 330, 30));
 
         register.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         register.setText("Cancel");
@@ -121,15 +124,15 @@ public class Registration extends javax.swing.JFrame {
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel11.setText("EMAIL:");
-        Manager_Login1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 350, 70, 30));
+        Manager_Login1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 400, 60, 30));
 
-        Eemail.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Eemail.addActionListener(new java.awt.event.ActionListener() {
+        email.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        email.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EemailActionPerformed(evt);
+                emailActionPerformed(evt);
             }
         });
-        Manager_Login1.add(Eemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, 330, 30));
+        Manager_Login1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 400, 330, 30));
 
         jLabel12.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel12.setText("USERNAME:");
@@ -148,19 +151,19 @@ public class Registration extends javax.swing.JFrame {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        Manager_Login1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 140, 160, 30));
+        Manager_Login1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 120, 160, 30));
 
         jLabel13.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel13.setText("CONFIRM PASSWORD:");
-        Manager_Login1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 300, 170, 30));
+        Manager_Login1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 350, 170, 30));
 
-        ECpassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        ECpassword.addActionListener(new java.awt.event.ActionListener() {
+        Cpassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        Cpassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ECpasswordActionPerformed(evt);
+                CpasswordActionPerformed(evt);
             }
         });
-        Manager_Login1.add(ECpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 300, 330, 30));
+        Manager_Login1.add(Cpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, 330, 30));
 
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         register1.setText("REGISTER");
@@ -169,7 +172,14 @@ public class Registration extends javax.swing.JFrame {
                 register1ActionPerformed(evt);
             }
         });
-        Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 400, 140, 30));
+        Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 450, 140, 30));
+
+        accType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Employee", "Admin" }));
+        Manager_Login1.add(accType, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 250, 330, 30));
+
+        jLabel14.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel14.setText("ACCOUNT TYPE:");
+        Manager_Login1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 250, 120, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,13 +206,13 @@ public class Registration extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void EpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EpasswordActionPerformed
+    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_EpasswordActionPerformed
+    }//GEN-LAST:event_passwordActionPerformed
 
-    private void EusernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EusernameActionPerformed
+    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_EusernameActionPerformed
+    }//GEN-LAST:event_usernameActionPerformed
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
     Coffeeshop c = new Coffeeshop();
@@ -210,30 +220,45 @@ public class Registration extends javax.swing.JFrame {
     this.dispose(); 
     }//GEN-LAST:event_registerActionPerformed
 
-    private void EemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EemailActionPerformed
+    private void emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_EemailActionPerformed
+    }//GEN-LAST:event_emailActionPerformed
 
-    private void ECpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ECpasswordActionPerformed
+    private void CpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CpasswordActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ECpasswordActionPerformed
+    }//GEN-LAST:event_CpasswordActionPerformed
 
     private void register1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register1ActionPerformed
-    String password = new String(Epassword.getPassword()).trim();
-    String Cpassword = new String(ECpassword.getPassword()).trim();
-    String username = Eusername.getText().trim();
-    String email = Eemail.getText().trim();
+    dbConnect dbc = new dbConnect();
+    String uname = username.getText().trim();
+    String pass = new String(password.getPassword()).trim();
+    String Cpass = new String(Cpassword.getPassword()).trim();
+    String e = email.getText().trim();
+    String at = accType.getSelectedItem().toString().trim();
     
-    if(password.isEmpty() || Cpassword.isEmpty() || username.isEmpty() || email.isEmpty())
-    {
-        JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
-    }else if(password.length() < 8)
-    {
-        JOptionPane.showMessageDialog(null, "Password Must Be 8 Characters Long");
-    }else if(!password.equals(Cpassword))
-    {
-        JOptionPane.showMessageDialog(null, "Password Does Not Match");
-    }
+
+
+
+        if(uname.isEmpty() || pass.isEmpty() || Cpass.isEmpty() || e.isEmpty() || at.isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
+
+        }else if(!pass.equals(Cpass))
+        {
+            JOptionPane.showMessageDialog(null, "Password Does Not Match");
+            //System.out.println("Password ["+password+"] Length: "+password.length());
+            //System.out.println("Confirm Password ["+Cpassword+"] Length: "+Cpassword.length());
+        }else if(pass.length() <= 7)
+        {
+            JOptionPane.showMessageDialog(null, "Password Must Exceed 8 Characters");
+        }else if(!e.contains("@") && !e.contains(".com"))
+        {
+            JOptionPane.showMessageDialog(null, "Enter Valid Email");
+        }else if (dbc.insertData("INSERT INTO tbl_accounts (u_username, u_accType, u_pass, u_email, u_status) "
+        + "VALUES ('" + uname + "', '"+at+"','" + pass + "','" + e + "', 'Pending')") == 0) 
+        {
+            JOptionPane.showMessageDialog(null, "Registered succesfully!");
+        }
     }//GEN-LAST:event_register1ActionPerformed
 
     /**
@@ -272,21 +297,23 @@ public class Registration extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField ECpassword;
-    private javax.swing.JTextField Eemail;
-    private javax.swing.JPasswordField Epassword;
-    private javax.swing.JTextField Eusername;
+    private javax.swing.JPasswordField Cpassword;
     private javax.swing.JPanel Header1;
     private javax.swing.JPanel Manager_Login1;
     private javax.swing.JPanel Navigation1;
+    private javax.swing.JComboBox<String> accType;
+    private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPasswordField password;
     private javax.swing.JButton register;
     private javax.swing.JButton register1;
+    private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

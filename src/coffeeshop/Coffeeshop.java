@@ -1,6 +1,8 @@
 package coffeeshop;
 
 
+import admin.U_Admin;
+import admin.adminDashboard;
 import javax.swing.JOptionPane;
 
 /*
@@ -41,11 +43,12 @@ public class Coffeeshop extends javax.swing.JFrame {
         Mpassword = new javax.swing.JPasswordField();
         MR_clickhere = new javax.swing.JLabel();
         Musername = new javax.swing.JTextField();
-        register = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         Memail = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
+        register1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,15 +120,6 @@ public class Coffeeshop extends javax.swing.JFrame {
         });
         Manager_Login1.add(Musername, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 200, 330, 30));
 
-        register.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        register.setText("LOGIN");
-        register.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerActionPerformed(evt);
-            }
-        });
-        Manager_Login1.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 390, 140, 30));
-
         jLabel11.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel11.setText("EMAIL:");
         Manager_Login1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 300, 70, 30));
@@ -156,6 +150,23 @@ public class Coffeeshop extends javax.swing.JFrame {
         );
 
         Manager_Login1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 140, 160, 30));
+
+        register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        register1.setText("LOGIN");
+        register1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                register1ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 390, 140, 30));
+
+        jButton1.setText("Testing");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 330, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,20 +207,19 @@ public class Coffeeshop extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_MusernameActionPerformed
 
-    private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
-    String password = new String(Mpassword.getPassword()).trim();
-    String username = Musername.getText().trim();
-    String email = Memail.getText().trim();
-    
-    if(password.isEmpty() || username.isEmpty() || email.isEmpty())
-    {
-        JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
-    }
-    }//GEN-LAST:event_registerActionPerformed
-
     private void MemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MemailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_MemailActionPerformed
+
+    private void register1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_register1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        adminDashboard ua = new adminDashboard();
+        ua.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -255,12 +265,13 @@ public class Coffeeshop extends javax.swing.JFrame {
     private javax.swing.JPasswordField Mpassword;
     private javax.swing.JTextField Musername;
     private javax.swing.JPanel Navigation1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton register;
+    private javax.swing.JButton register1;
     // End of variables declaration//GEN-END:variables
 }
