@@ -3,6 +3,8 @@ package coffeeshop;
 
 import coffeeshop.Coffeeshop;
 import config.dbConnect;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /*
@@ -23,6 +25,45 @@ public class Registration extends javax.swing.JFrame {
     public Registration() {
         initComponents();
         this.setResizable(false);
+    }
+   
+    public static String mail,usname;
+    
+    public boolean duplicateCheck()
+    {
+        dbConnect dbc = new dbConnect();
+        String e = email.getText().trim();
+        String us = username.getText().trim();
+        
+        try
+        {
+            String query = "SELECT * FROM tbl_accounts WHERE u_username='"+ us +"'OR u_email='"+ e +"'";
+            ResultSet resultSet = dbc.getData(query);
+            if(resultSet.next())
+            {
+                mail = resultSet.getString("u_email");
+                if(mail.equals(e))
+                {
+                    JOptionPane.showMessageDialog(null, "Email is Already Used");
+                    email.setText("");
+                }
+                
+                usname = resultSet.getString("u_username");
+                if(usname.equals(us))
+                {
+                    JOptionPane.showMessageDialog(null, "Username is Already Used");
+                    username.setText("");
+                }
+                return true;
+            }else
+            {
+                return false;
+            }
+        }catch(SQLException ex)
+        {
+            System.out.println(""+ex);
+            return false;
+        }
     }
 
     /**
@@ -236,6 +277,7 @@ public class Registration extends javax.swing.JFrame {
     String e = email.getText().trim();
     String at = accType.getSelectedItem().toString().trim();
     
+    
 
 
 
@@ -251,13 +293,19 @@ public class Registration extends javax.swing.JFrame {
         }else if(pass.length() <= 7)
         {
             JOptionPane.showMessageDialog(null, "Password Must Exceed 8 Characters");
-        }else if(!e.contains("@") && !e.contains(".com"))
+        }else if(!e.contains("@") && !e.contains(".com")) 
         {
             JOptionPane.showMessageDialog(null, "Enter Valid Email");
+        }else if(duplicateCheck())
+        {
+            System.out.println("Duplicate Exists");
         }else if (dbc.insertData("INSERT INTO tbl_accounts (u_username, u_accType, u_pass, u_email, u_status) "
-        + "VALUES ('" + uname + "', '"+at+"','" + pass + "','" + e + "', 'Pending')") == 0) 
+        + "VALUES ('" + uname + "', '"+at+"','" + pass + "','" + e + "', 'Pending')")) 
         {
             JOptionPane.showMessageDialog(null, "Registered succesfully!");
+            Coffeeshop c = new Coffeeshop();
+            c.setVisible(true);
+            this.dispose();
         }
     }//GEN-LAST:event_register1ActionPerformed
 

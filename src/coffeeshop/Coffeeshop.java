@@ -1,8 +1,12 @@
 package coffeeshop;
 
 
+import Employee.EmployeeDashboard;
 import admin.U_Admin;
 import admin.adminDashboard;
+import config.dbConnect;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /*
@@ -11,19 +15,42 @@ import javax.swing.JOptionPane;
  * and open the template in the editor.
  */
 
-/**
- *
- * @author DANIEL FAILADONA
- */
+
 public class Coffeeshop extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Coffeeshop
-     */
+  
     public Coffeeshop() {
         initComponents();
         this.setResizable(false);
     }
+    
+    static String status;
+    static String type;
+    public static boolean logAcc(String username, String password, String email)
+    {
+        dbConnect connector = new dbConnect();
+        try
+        {
+            String query = "SELECT * FROM tbl_accounts WHERE u_username='"+ username +"'AND u_pass='"+ password +"'AND u_email='"+ email +"'";
+            ResultSet resultSet = connector.getData(query);
+            if(resultSet.next())
+            {
+                status = resultSet.getString("u_status");
+                type = resultSet.getString("u_accType");
+                return true;
+            }else
+            {
+                return false;
+            }
+        }catch(SQLException ex)
+        {
+            return false;
+        }
+    }
+    
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,7 +75,6 @@ public class Coffeeshop extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         register1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,20 +179,12 @@ public class Coffeeshop extends javax.swing.JFrame {
 
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         register1.setText("LOGIN");
-        register1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                register1ActionPerformed(evt);
+        register1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                register1MouseClicked(evt);
             }
         });
         Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 390, 140, 30));
-
-        jButton1.setText("Testing");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        Manager_Login1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 330, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -211,15 +229,41 @@ public class Coffeeshop extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_MemailActionPerformed
 
-    private void register1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_register1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        adminDashboard ua = new adminDashboard();
-        ua.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void register1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_register1MouseClicked
+        String uname = Musername.getText().trim();
+        String e = Memail.getText().trim();
+        String pass = new String(Mpassword.getPassword()).trim();
+    
+        if(logAcc(uname,pass,e))
+        {
+            if(!status.equals("Active")  )
+            {
+                JOptionPane.showMessageDialog(null, "Inactive Account, Contact Admin");
+            }else
+            {
+                if(type.equals("Admin"))
+                {
+                    JOptionPane.showMessageDialog(null, "Login Succesfully");
+                    adminDashboard ad = new adminDashboard();
+                    ad.setVisible(true);
+                    this.dispose();
+                }
+                if(type.equals("Employee"))
+                {
+                    JOptionPane.showMessageDialog(null, "Login Succesfully");
+                    EmployeeDashboard ed = new EmployeeDashboard();
+                    ed.setVisible(true);
+                    this.dispose();
+                }else
+                {
+                    JOptionPane.showMessageDialog(null, "Unknown Account Type, Contact the Admin");
+                }
+            }
+        }else
+        {
+            JOptionPane.showMessageDialog(null, "Invalid Account");
+        }
+    }//GEN-LAST:event_register1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -265,7 +309,6 @@ public class Coffeeshop extends javax.swing.JFrame {
     private javax.swing.JPasswordField Mpassword;
     private javax.swing.JTextField Musername;
     private javax.swing.JPanel Navigation1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
