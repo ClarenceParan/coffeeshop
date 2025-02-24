@@ -44,6 +44,8 @@ public class U_Admin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         Navigation1 = new javax.swing.JPanel();
         register = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         account_table = new javax.swing.JTable();
         register1 = new javax.swing.JButton();
@@ -52,7 +54,7 @@ public class U_Admin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        Manager_Login1.setBackground(new java.awt.Color(153, 153, 153));
+        Manager_Login1.setBackground(new java.awt.Color(133, 108, 91));
         Manager_Login1.setForeground(new java.awt.Color(204, 204, 204));
         Manager_Login1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -64,11 +66,11 @@ public class U_Admin extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("COFFEE SHOP");
-        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1320, 40));
+        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-80, 30, 1100, 40));
 
-        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 100));
+        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 1090, 100));
 
-        Navigation1.setBackground(new java.awt.Color(102, 102, 102));
+        Navigation1.setBackground(new java.awt.Color(176, 136, 109));
         Navigation1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         register.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -85,8 +87,17 @@ public class U_Admin extends javax.swing.JFrame {
         });
         Navigation1.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 610, 140, 30));
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/scp.png"))); // NOI18N
+        Navigation1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, 80, 320, 590));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/scp_1.png"))); // NOI18N
+        Navigation1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 270, 540));
+
         Manager_Login1.add(Navigation1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 640));
 
+        jScrollPane1.setBackground(new java.awt.Color(176, 136, 109));
+
+        account_table.setAutoCreateColumnsFromModel(false);
         account_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -213,6 +224,8 @@ public class U_Admin extends javax.swing.JFrame {
     private javax.swing.JPanel Manager_Login1;
     private javax.swing.JPanel Navigation1;
     private javax.swing.JTable account_table;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton register;

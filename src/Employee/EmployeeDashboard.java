@@ -6,7 +6,7 @@
 package Employee;
 
 import admin.*;
-import coffeeshop.Coffeeshop;
+import Startups.Coffeeshop;
 
 /**
  *
@@ -50,12 +50,12 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("COFFEE SHOP Employee");
-        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1320, 40));
+        jLabel3.setText("COFFEE SHOP");
+        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, 30, 1040, 40));
 
-        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 100));
+        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 1090, 100));
 
-        Navigation1.setBackground(new java.awt.Color(102, 102, 102));
+        Navigation1.setBackground(new java.awt.Color(133, 108, 91));
         Navigation1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         register.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -73,7 +73,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         Navigation1.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 610, 140, 30));
 
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        register1.setText("Users");
+        register1.setText("Purchase Coffee");
         register1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 register1MouseClicked(evt);

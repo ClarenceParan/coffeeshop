@@ -5,7 +5,7 @@
  */
 package admin;
 
-import coffeeshop.Coffeeshop;
+import Startups.Coffeeshop;
 
 /**
  *
@@ -50,11 +50,11 @@ public class adminDashboard extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("COFFEE SHOP");
-        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1320, 40));
+        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-190, 30, 1320, 40));
 
-        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 100));
+        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 1090, 100));
 
-        Navigation1.setBackground(new java.awt.Color(102, 102, 102));
+        Navigation1.setBackground(new java.awt.Color(133, 108, 91));
         Navigation1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         register.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
