@@ -224,7 +224,10 @@ public class Coffeeshop extends javax.swing.JFrame {
         String e = Memail.getText().trim();
         String pass = new String(Mpassword.getPassword()).trim();
     
-        if(logAcc(uname,pass,e))
+        if(pass.isEmpty() || uname.isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "Please Fill all Boxes");
+        }else if(logAcc(uname,pass,e))
         {
             if(!status.equals("Active")  )
             {
@@ -238,7 +241,7 @@ public class Coffeeshop extends javax.swing.JFrame {
                     ad.setVisible(true);
                     this.dispose();
                 }
-                if(type.equals("Employee"))
+                else if(type.equals("Employee"))
                 {
                     JOptionPane.showMessageDialog(null, "Login Succesfully");
                     EmployeeDashboard ed = new EmployeeDashboard();
