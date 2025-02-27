@@ -10,15 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import net.proteanit.sql.DbUtils;
 
-/**
- *
- * @author DANIEL FAILADONA
- */
+
 public class U_Admin extends javax.swing.JFrame {
 
     
     public U_Admin() {
-        initComponents();displayData();
+        initComponents();
+        displayData();
     }
 
     public void displayData()
@@ -46,11 +44,11 @@ public class U_Admin extends javax.swing.JFrame {
         register = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        account_table = new javax.swing.JTable();
         register1 = new javax.swing.JButton();
         register2 = new javax.swing.JButton();
         register3 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        account_table = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -95,21 +93,6 @@ public class U_Admin extends javax.swing.JFrame {
 
         Manager_Login1.add(Navigation1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 640));
 
-        jScrollPane1.setBackground(new java.awt.Color(176, 136, 109));
-
-        account_table.setAutoCreateColumnsFromModel(false);
-        account_table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        jScrollPane1.setViewportView(account_table);
-
-        Manager_Login1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 182, 1090, 460));
-
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         register1.setText("DELETE");
         register1.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +119,18 @@ public class U_Admin extends javax.swing.JFrame {
             }
         });
         Manager_Login1.add(register3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 120, 140, 50));
+
+        account_table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(account_table);
+
+        Manager_Login1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 210, 1090, 430));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
