@@ -3,8 +3,15 @@ package Startups;
 
 import Startups.Coffeeshop;
 import config.dbConnect;
+import config.passwordHasher;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 
@@ -72,6 +79,40 @@ public class Registration extends javax.swing.JFrame {
             return false;
         }
     }
+    
+    
+    public void logEvent(int userId, String username, String action) {
+        dbConnect dbc = new dbConnect();
+        Connection con = dbc.getConnection();
+        PreparedStatement pstmt = null;
+        Timestamp time = new Timestamp(new java.util.Date().getTime());
+
+        try {
+            String sql = "INSERT INTO tbl_logs (u_id, u_username, action_time, log_action) "
+                    + "VALUES ('" + userId + "', '" + username + "', '" + time + "', '" + action + "')";
+            pstmt = con.prepareStatement(sql);
+
+            /*            pstmt.setInt(1, userId);
+            pstmt.setString(2, username);
+            pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+            pstmt.setString(4, userType);*/
+            pstmt.executeUpdate();
+            System.out.println("Login log recorded successfully.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -101,6 +142,8 @@ public class Registration extends javax.swing.JFrame {
         register1 = new javax.swing.JButton();
         accType = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
+        check1 = new javax.swing.JCheckBox();
+        check2 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,15 +159,15 @@ public class Registration extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("COFFEE SHOP");
-        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, 40, 690, 40));
+        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, 20, 1290, 60));
 
-        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 0, 650, 100));
+        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1340, 100));
 
         Navigation1.setBackground(new java.awt.Color(102, 102, 102));
         Navigation1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         logo_jpg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/logo.jpg"))); // NOI18N
-        Navigation1.add(logo_jpg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-260, -10, 960, 640));
+        Navigation1.add(logo_jpg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-260, 100, 1050, 530));
 
         Manager_Login1.add(Navigation1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 690, 640));
 
@@ -228,6 +271,26 @@ public class Registration extends javax.swing.JFrame {
         jLabel14.setText("ACCOUNT TYPE:");
         Manager_Login1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 260, 120, 30));
 
+        check1.setBackground(new java.awt.Color(176, 136, 109));
+        check1.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
+        check1.setText("Show");
+        check1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                check1ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(check1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 320, -1, -1));
+
+        check2.setBackground(new java.awt.Color(176, 136, 109));
+        check2.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
+        check2.setText("Show");
+        check2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                check2ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(check2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 370, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -273,46 +336,103 @@ public class Registration extends javax.swing.JFrame {
     private void register1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register1ActionPerformed
     dbConnect dbc = new dbConnect();
     String uname = username.getText().trim();
-    String pass = new String(password.getPassword()).trim();
+    String passw = new String(password.getPassword()).trim();
     String Cpass = new String(Cpassword.getPassword()).trim();
     String e = email.getText().trim();
     String at = accType.getSelectedItem().toString().trim();
+    dbConnect connector = new dbConnect();
+    int userId = 0;
+    String image = "";
+    String sq = "";
+    String sa = "";
+    
+
+
     
     
 
 
 
-        if(uname.isEmpty() || pass.isEmpty() || Cpass.isEmpty() || e.isEmpty() || at.isEmpty())
+        if(uname.isEmpty() || passw.isEmpty() || Cpass.isEmpty() || e.isEmpty() || at.isEmpty())
         {
             JOptionPane.showMessageDialog(null, "Please Fill All Boxes");
 
-        }else if(!pass.equals(Cpass))
+        }else if(!passw.equals(Cpass))
         {
             JOptionPane.showMessageDialog(null, "Password Does Not Match");
             //System.out.println("Password ["+password+"] Length: "+password.length());
             //System.out.println("Confirm Password ["+Cpassword+"] Length: "+Cpassword.length());
-        }else if(pass.length() <= 7)
+        }else if(passw.length() <= 7)
         {
             JOptionPane.showMessageDialog(null, "Password Must Exceed 8 Characters");
-        }else if(!e.contains("@") && !e.contains(".com")) 
+        }else if(!isValidEmail(e)) 
         {
             JOptionPane.showMessageDialog(null, "Enter Valid Email");
         }else if(duplicateCheck())
         {
             System.out.println("Duplicate Exists");
-        }else if (dbc.insertData("INSERT INTO tbl_accounts (u_username, u_accType, u_pass, u_email, u_status) "
-        + "VALUES ('" + uname + "', '"+at+"','" + pass + "','" + e + "', 'Pending')")) 
+        }else
         {
-            JOptionPane.showMessageDialog(null, "Registered succesfully!");
-            Coffeeshop c = new Coffeeshop();
-            c.setVisible(true);
-            this.dispose();
+            try
+            {
+                String pass = passwordHasher.hashPassword(passw);
+
+                if (dbc.insertData("INSERT INTO tbl_accounts (u_username, u_accType, u_pass, u_email, u_status, u_image, security_question, security_answer) "
+                + "VALUES ('" + uname + "', '"+at+"','" + pass + "','" + e + "', 'Pending','" + image + "','" + sq + "','" + sa + "')")) 
+                {
+                    
+                    try {
+                        String query = "SELECT u_id FROM tbl_accounts WHERE u_username = '" + uname + "'";
+                        PreparedStatement pstmt = connector.getConnection().prepareStatement(query);
+
+                        ResultSet resultSet = pstmt.executeQuery();
+
+                        if (resultSet.next()) {
+                            userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
+                        }
+                    } catch (SQLException ex) {
+                        System.out.println("SQL Exception: " + ex);
+                    }
+
+                    logEvent(userId, uname, "Registered for the first time");
+                    
+                    
+                    
+                    JOptionPane.showMessageDialog(null, "Registered succesfully!");
+                    Coffeeshop c = new Coffeeshop();
+                    c.setVisible(true);
+                    this.dispose();
+                }
+            }catch(NoSuchAlgorithmException ex)
+            {
+                System.out.println(""+ ex);
+            }
         }
     }//GEN-LAST:event_register1ActionPerformed
 
     private void accTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accTypeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_accTypeActionPerformed
+
+    private void check1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check1ActionPerformed
+        boolean isSelected = check1.isSelected();
+
+        if (isSelected) {
+            password.setEchoChar((char)0);
+        } else {
+            password.setEchoChar('*');
+        }
+    }//GEN-LAST:event_check1ActionPerformed
+
+    private void check2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check2ActionPerformed
+        boolean isSelected = check2.isSelected();
+
+        if (isSelected) {
+            Cpassword.setEchoChar((char)0);
+        } else {
+            Cpassword.setEchoChar('*');
+        }
+    }//GEN-LAST:event_check2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,6 +475,8 @@ public class Registration extends javax.swing.JFrame {
     private javax.swing.JPanel Manager_Login1;
     private javax.swing.JPanel Navigation1;
     private javax.swing.JComboBox<String> accType;
+    private javax.swing.JCheckBox check1;
+    private javax.swing.JCheckBox check2;
     private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -370,4 +492,13 @@ public class Registration extends javax.swing.JFrame {
     private javax.swing.JButton register1;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
+
+private boolean isValidEmail(String text) {
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(text);
+    return matcher.matches();
+
+    }
+
 }

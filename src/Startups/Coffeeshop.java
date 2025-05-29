@@ -4,9 +4,16 @@ package Startups;
 import Employee.EmployeeDashboard;
 import admin.U_Admin;
 import admin.adminDashboard;
+import config.Session;
 import config.dbConnect;
+import config.passwordHasher;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /*
@@ -26,25 +33,79 @@ public class Coffeeshop extends javax.swing.JFrame {
     
     static String status;
     static String type;
-    public static boolean logAcc(String username, String password, String email)
+    public static boolean logAcc(String username, String password)
     {
         dbConnect connector = new dbConnect();
         try
         {
-            String query = "SELECT * FROM tbl_accounts WHERE u_username='"+ username +"'AND u_pass='"+ password +"'AND u_email='"+ email +"'";
+            String query = "SELECT * FROM tbl_accounts WHERE u_username='"+ username +"'";
             ResultSet resultSet = connector.getData(query);
             if(resultSet.next())
             {
+                String hashedPass = resultSet.getString("u_pass");
+                String rehashedPass = passwordHasher.hashPassword(password);
+
+                if(hashedPass.equals(rehashedPass))
+                {
+            
                 status = resultSet.getString("u_status");
                 type = resultSet.getString("u_accType");
+                
+                Session sess = Session.getInstance();
+                sess.setUid(resultSet.getInt("u_id"));
+                sess.setUname(resultSet.getString("u_username"));
+                sess.setType(resultSet.getString("u_accType"));
+                sess.setMail(resultSet.getString("u_email"));
                 return true;
+                }else
+                {
+                    return false;
+                }
             }else
             {
                 return false;
             }
-        }catch(SQLException ex)
+        }catch(SQLException | NoSuchAlgorithmException ex)
         {
+            System.out.println(""+ex); // Always put 
             return false;
+        }
+    } ///llllllll
+    
+    
+    
+    
+    public void logEvent(int userId, String username, String action) {
+        dbConnect dbc = new dbConnect();
+        Connection con = dbc.getConnection();
+        PreparedStatement pstmt = null;
+        Timestamp time = new Timestamp(new Date().getTime());
+        System.out.println("userId: "+userId);
+
+        try {
+            String sql = "INSERT INTO tbl_logs (u_id, u_username, action_time, log_action) "
+                    + "VALUES ('" + userId + "', '" + username + "', '" + time + "', '" + action + "')";
+            pstmt = con.prepareStatement(sql);
+
+            /*            pstmt.setInt(1, userId);
+            pstmt.setString(2, username);
+            pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+            pstmt.setString(4, userType);*/
+            pstmt.executeUpdate();
+            System.out.println("Login log recorded successfully.");
+        } catch (SQLException e) {
+            //JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+            }
         }
     }
     
@@ -71,12 +132,12 @@ public class Coffeeshop extends javax.swing.JFrame {
         Mpassword = new javax.swing.JPasswordField();
         MR_clickhere = new javax.swing.JLabel();
         Musername = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        Memail = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         register1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        check1 = new javax.swing.JCheckBox();
+        register2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,7 +170,7 @@ public class Coffeeshop extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Login");
-        Manager_Login1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 140, 160, 30));
+        Manager_Login1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 120, 160, 30));
 
         jLabel10.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel10.setText("PASSWORD:");
@@ -125,13 +186,13 @@ public class Coffeeshop extends javax.swing.JFrame {
 
         MR_clickhere.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         MR_clickhere.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        MR_clickhere.setText("Add new owner account? click here");
+        MR_clickhere.setText("Forgot Pass? click here");
         MR_clickhere.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 MR_clickhereMouseClicked(evt);
             }
         });
-        Manager_Login1.add(MR_clickhere, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 350, 330, 20));
+        Manager_Login1.add(MR_clickhere, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 310, 330, 20));
 
         Musername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         Musername.addActionListener(new java.awt.event.ActionListener() {
@@ -140,18 +201,6 @@ public class Coffeeshop extends javax.swing.JFrame {
             }
         });
         Manager_Login1.add(Musername, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 200, 330, 30));
-
-        jLabel11.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel11.setText("EMAIL:");
-        Manager_Login1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 300, 70, 30));
-
-        Memail.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Memail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MemailActionPerformed(evt);
-            }
-        });
-        Manager_Login1.add(Memail, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 300, 330, 30));
 
         jLabel12.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel12.setText("USERNAME:");
@@ -170,7 +219,7 @@ public class Coffeeshop extends javax.swing.JFrame {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        Manager_Login1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 140, 160, 30));
+        Manager_Login1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 120, 160, 30));
 
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         register1.setText("LOGIN");
@@ -179,10 +228,39 @@ public class Coffeeshop extends javax.swing.JFrame {
                 register1MouseClicked(evt);
             }
         });
-        Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 390, 140, 30));
+        register1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                register1ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 390, 140, 30));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/cup.png"))); // NOI18N
         Manager_Login1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 420, 480, 250));
+
+        check1.setBackground(new java.awt.Color(176, 136, 109));
+        check1.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
+        check1.setText("Show");
+        check1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                check1ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(check1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 260, -1, -1));
+
+        register2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        register2.setText("Register");
+        register2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                register2MouseClicked(evt);
+            }
+        });
+        register2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                register2ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(register2, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 390, 140, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -206,8 +284,8 @@ public class Coffeeshop extends javax.swing.JFrame {
     }//GEN-LAST:event_MpasswordActionPerformed
 
     private void MR_clickhereMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MR_clickhereMouseClicked
-        Registration r = new Registration();
-        r.setVisible(true);
+        ForgetPass fp = new ForgetPass();
+        fp.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_MR_clickhereMouseClicked
 
@@ -215,27 +293,42 @@ public class Coffeeshop extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_MusernameActionPerformed
 
-    private void MemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MemailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_MemailActionPerformed
-
     private void register1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_register1MouseClicked
+        Session sess = Session.getInstance();
+        dbConnect connector = new dbConnect();
         String uname = Musername.getText().trim();
-        String e = Memail.getText().trim();
         String pass = new String(Mpassword.getPassword()).trim();
+        int userId = sess.getUid();
+        System.out.println(""+userId);
     
         if(pass.isEmpty() || uname.isEmpty())
         {
             JOptionPane.showMessageDialog(null, "Please Fill all Boxes");
-        }else if(logAcc(uname,pass,e))
+        }else if(logAcc(uname,pass))
         {
             if(!status.equals("Active")  )
             {
                 JOptionPane.showMessageDialog(null, "Inactive Account, Contact Admin");
             }else
             {
+                
+                try {
+                    String query = "SELECT u_id FROM tbl_accounts WHERE u_username = '" + uname + "'";
+                    PreparedStatement pstmt = connector.getConnection().prepareStatement(query);
+
+                    ResultSet resultSet = pstmt.executeQuery();
+
+                    if (resultSet.next()) {
+                        userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("SQL Exception: " + ex);
+                }
+                
+                
                 if(type.equals("Admin"))
                 {
+                    logEvent(userId, uname, "Logged as Admin");
                     JOptionPane.showMessageDialog(null, "Login Succesfully");
                     adminDashboard ad = new adminDashboard();
                     ad.setVisible(true);
@@ -243,6 +336,7 @@ public class Coffeeshop extends javax.swing.JFrame {
                 }
                 else if(type.equals("Employee"))
                 {
+                    logEvent(userId, uname, "Logged as Employee");
                     JOptionPane.showMessageDialog(null, "Login Succesfully");
                     EmployeeDashboard ed = new EmployeeDashboard();
                     ed.setVisible(true);
@@ -257,6 +351,30 @@ public class Coffeeshop extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Invalid Account");
         }
     }//GEN-LAST:event_register1MouseClicked
+
+    private void check1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check1ActionPerformed
+        boolean isSelected = check1.isSelected();
+
+        if (isSelected) {
+            Mpassword.setEchoChar((char)0);
+        } else {
+            Mpassword.setEchoChar('*');
+        }
+    }//GEN-LAST:event_check1ActionPerformed
+
+    private void register1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_register1ActionPerformed
+
+    private void register2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_register2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_register2MouseClicked
+
+    private void register2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register2ActionPerformed
+        Registration r = new Registration();
+        r.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_register2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -298,12 +416,11 @@ public class Coffeeshop extends javax.swing.JFrame {
     private javax.swing.JPanel Header1;
     private javax.swing.JLabel MR_clickhere;
     private javax.swing.JPanel Manager_Login1;
-    private javax.swing.JTextField Memail;
     private javax.swing.JPasswordField Mpassword;
     private javax.swing.JTextField Musername;
     private javax.swing.JPanel Navigation1;
+    private javax.swing.JCheckBox check1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -311,5 +428,6 @@ public class Coffeeshop extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel logo_jpg;
     private javax.swing.JButton register1;
+    private javax.swing.JButton register2;
     // End of variables declaration//GEN-END:variables
 }

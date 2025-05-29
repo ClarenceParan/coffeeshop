@@ -7,6 +7,15 @@ package Employee;
 
 import admin.*;
 import Startups.Coffeeshop;
+import config.Session;
+import config.dbConnect;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +28,42 @@ public class EmployeeDashboard extends javax.swing.JFrame {
      */
     public EmployeeDashboard() {
         initComponents();
+    }
+    
+    
+    
+    
+    public void logEvent(int userId, String username, String action) {
+        dbConnect dbc = new dbConnect();
+        Connection con = dbc.getConnection();
+        PreparedStatement pstmt = null;
+        Timestamp time = new Timestamp(new Date().getTime());
+
+        try {
+            String sql = "INSERT INTO tbl_logs (u_id, u_username, action_time, log_action) "
+                    + "VALUES ('" + userId + "', '" + username + "', '" + time + "', '" + action + "')";
+            pstmt = con.prepareStatement(sql);
+
+            /*            pstmt.setInt(1, userId);
+            pstmt.setString(2, username);
+            pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+            pstmt.setString(4, userType);*/
+            pstmt.executeUpdate();
+            System.out.println("Login log recorded successfully.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error recording log: " + e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+            }
+        }
     }
 
     /**
@@ -35,9 +80,19 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         Navigation1 = new javax.swing.JPanel();
         register = new javax.swing.JButton();
+        acc_id = new javax.swing.JLabel();
+        acc_type = new javax.swing.JLabel();
+        acc_uname = new javax.swing.JLabel();
+        acc_email = new javax.swing.JLabel();
         register1 = new javax.swing.JButton();
+        register2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         Manager_Login1.setBackground(new java.awt.Color(153, 153, 153));
         Manager_Login1.setForeground(new java.awt.Color(204, 204, 204));
@@ -50,10 +105,10 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("COFFEE SHOP");
-        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, 30, 1040, 40));
+        jLabel3.setText("Employee Dashboard");
+        Header1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1320, 40));
 
-        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 1090, 100));
+        Manager_Login1.add(Header1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 100));
 
         Navigation1.setBackground(new java.awt.Color(133, 108, 91));
         Navigation1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -70,18 +125,56 @@ public class EmployeeDashboard extends javax.swing.JFrame {
                 registerActionPerformed(evt);
             }
         });
-        Navigation1.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 610, 140, 30));
+        Navigation1.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 510, 140, 30));
+
+        acc_id.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        acc_id.setForeground(new java.awt.Color(255, 255, 255));
+        acc_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_id.setText("ID");
+        Navigation1.add(acc_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, 230, 30));
+
+        acc_type.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        acc_type.setForeground(new java.awt.Color(255, 255, 255));
+        acc_type.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_type.setText("Type");
+        Navigation1.add(acc_type, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, 230, 30));
+
+        acc_uname.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        acc_uname.setForeground(new java.awt.Color(255, 255, 255));
+        acc_uname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_uname.setText("User Name");
+        Navigation1.add(acc_uname, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, 230, 30));
+
+        acc_email.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        acc_email.setForeground(new java.awt.Color(255, 255, 255));
+        acc_email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_email.setText("Email");
+        Navigation1.add(acc_email, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 330, 230, 30));
+
+        Manager_Login1.add(Navigation1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 400, 540));
 
         register1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        register1.setText("Purchase Coffee");
+        register1.setText("Acount Details");
         register1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 register1MouseClicked(evt);
             }
         });
-        Navigation1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 230, 40));
+        Manager_Login1.add(register1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 110, 150, 70));
 
-        Manager_Login1.add(Navigation1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 640));
+        register2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        register2.setText("Buy Coffee");
+        register2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                register2MouseClicked(evt);
+            }
+        });
+        register2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                register2ActionPerformed(evt);
+            }
+        });
+        Manager_Login1.add(register2, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 110, 150, 70));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,7 +189,7 @@ public class EmployeeDashboard extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 671, Short.MAX_VALUE)
+            .addGap(0, 640, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -113,14 +206,81 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_registerActionPerformed
 
     private void register1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_register1MouseClicked
-    
+        Session sess = Session.getInstance();
+        accountDetails ad = new accountDetails();
+
+        try {
+            dbConnect dbc = new dbConnect();
+            ResultSet rs = dbc.getData("SELECT * FROM tbl_accounts WHERE u_id = '" + sess.getUid() + "'");
+            if (rs.next()) {
+
+                ad.userName.setText("" + rs.getString("u_username"));
+                ad.Email.setText("" + rs.getString("u_email"));
+                ad.image.setIcon(ad.ResizeImage(rs.getString("u_image"), null, ad.image));
+                ad.oldpath = rs.getString("u_image");
+                ad.path = rs.getString("u_image");
+                ad.destination = rs.getString("u_image");
+
+                ad.setVisible(true);
+                this.dispose();
+            }
+        } catch (SQLException ex) {
+            System.out.println("" + ex);
+        }
     }//GEN-LAST:event_register1MouseClicked
 
     private void registerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseClicked
+        dbConnect connector = new dbConnect();
+        dbConnect dbc = new dbConnect();
+        Session sess = Session.getInstance();
+        int userId = 0;
+        String uname = null;
+        try {
+            String query2 = "SELECT * FROM tbl_accounts WHERE u_id = '" + sess.getUid() + "'";
+            PreparedStatement pstmt = connector.getConnection().prepareStatement(query2);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (resultSet.next()) {
+                userId = resultSet.getInt("u_id");   // Update the outer `userId` correctly
+                uname = resultSet.getString("u_username");
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQL Exception: " + ex);
+        }
+
+        logEvent(userId, uname, "Logged Out");
         Coffeeshop c = new Coffeeshop();
         c.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_registerMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        Session sess = Session.getInstance();
+        if (sess.getUid() == 0) {
+
+            Coffeeshop l = new Coffeeshop();
+            l.setVisible(true);
+            this.dispose();
+            JOptionPane.showMessageDialog(null, "No Account, Login FIrst");
+        } else {
+        
+            acc_uname.setText("Username: " + sess.getUname());
+            acc_type.setText("Usertype: " + sess.getType());
+            acc_email.setText("Mail: " + sess.getMail());
+            acc_id.setText("User ID: " + sess.getUid());
+        }
+    }//GEN-LAST:event_formWindowActivated
+
+    private void register2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_register2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_register2MouseClicked
+
+    private void register2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register2ActionPerformed
+        OrderForm of = new OrderForm();
+        of.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_register2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,8 +322,13 @@ public class EmployeeDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel Header1;
     private javax.swing.JPanel Manager_Login1;
     private javax.swing.JPanel Navigation1;
+    private javax.swing.JLabel acc_email;
+    private javax.swing.JLabel acc_id;
+    private javax.swing.JLabel acc_type;
+    private javax.swing.JLabel acc_uname;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JButton register;
     private javax.swing.JButton register1;
+    private javax.swing.JButton register2;
     // End of variables declaration//GEN-END:variables
 }
